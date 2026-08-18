@@ -56,6 +56,7 @@ python control_lora2.py
 | Cross-model chain transfer | blind partial, gated harmful | ⚠️ boundary regime |
 | Probe invariance | base probes fail on LoRA | ⚠️ alignment-sensitive |
 | Context-free SSAE bottleneck | act=0.001 | ❌ negative |
+| Quantization healing (RCR+LoRA) | 2/6 → 6/6 | ✅ perfect recovery |
 
 ## File map
 
