@@ -55,7 +55,6 @@ python control_lora2.py
 | Alignment control | latents 0.78–0.98 @ surface 1.0 | ✅ agreement |
 | Cross-model chain transfer | blind partial, gated harmful | ⚠️ boundary regime |
 | Probe invariance | base probes fail on LoRA | ⚠️ alignment-sensitive |
-| Quantization healer | domain mismatch | ❌ negative |
 | Context-free SSAE bottleneck | act=0.001 | ❌ negative |
 
 ## File map
