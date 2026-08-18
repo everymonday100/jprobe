@@ -40,9 +40,6 @@ python generate_finetune_data.py
 python finetune_math.py
 python check_lora.py
 python control_lora2.py
-
-# 5. negatives (documented failures)
-python healer_qtest.py
 ```
 
 ## Headline results (Qwen2.5-3B-Instruct)
