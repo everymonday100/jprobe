@@ -50,3 +50,22 @@ Surface acc = 1.0
 Latent readout (LoRA-trained probes): op 0.78–0.98, A/B 0.28–0.69
 
 Latents and surface agree post-alignment.
+
+## Quantization healing (RCR + LoRA)
+
+**Experiment:** RCR-quantize model (4-bit NF4 + Int8 residual plug), then apply fp16-trained LoRA adapter.
+
+| Model | TEST accuracy |
+|---|---|
+| fp16 (base) | 6/6 |
+| RCR quantized | 2/6 |
+| RCR + LoRA | **6/6** |
+
+**Result:** LoRA adapter (no weight changes) perfectly recovers quantized model.
+
+**Why:** LoRA corrects interface distortions at residual stream → lm_head boundary, compensating quantization artifacts without touching base weights.
+
+**Comparison:**
+- Hook-based denoiser (healer): failed (domain mismatch)
+- Cross-model chain transfer: failed (copying artifacts)
+- LoRA adapter: succeeded (alignment-level correction)
