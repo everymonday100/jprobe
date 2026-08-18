@@ -1,20 +1,59 @@
-# --- Python ---
+# ====================================================================
+# jprobe: Git Ignore Configuration for Mechanistic Interpretability
+# ====================================================================
+
+# --- Deep Learning Frameworks & Model Weights ---
+# Block large model checkpoints and serialized tensor weights
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.ckpt
+
+# --- Datasets & Generated Text Corpora ---
+# Ignore raw text dumps, generated training files, and local datasets
+*.jsonl
+*.csv
+*.tsv
+data/
+datasets/
+corpora/
+generated_*.txt
+
+# --- Python Environment & Runtime Cache ---
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-env*/
+*$py.class
+
+# Virtual Environments (Local deployment setups)
 .venv/
+venv/
+env_312/
+ENV/
+env/
 
-# --- модельные артефакты (воспроизводимы, не пушим) ---
-*.pt
-*.npy
-*.safetensors
-*.gguf
-trace_cache/
+# Pip log files and dependency diagnostics
+pip-log.txt
+pip-delete-this-directory.txt
 
-# --- локальные данные (по желанию) ---
-teacher.pt
-steer.pt
-proj_*.pt
-healer.pt
-lora_math.pt
-chains.json
+# --- IDEs, Text Editors & OS Artefacts ---
+# Notepad++ backup files and workspace sessions
+*.bak
+*.saved
+
+# VS Code project configurations
+.vscode/
+
+# PyCharm / JetBrains configurations
+.idea/
+
+# Windows system files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# --- Project Logging & Execution Dumps ---
+# Ignore execution logs and specific telemetry printouts
+*.log
+logs/
