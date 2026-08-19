@@ -57,6 +57,13 @@ python control_lora2.py
 | Probe invariance | base probes fail on LoRA | ⚠️ alignment-sensitive |
 | Context-free SSAE bottleneck | act=0.001 | ❌ negative |
 | Quantization healing (RCR+LoRA) | 2/6 → 6/6 | ✅ perfect recovery |
+| Operand encoding (layer-wise, sham-controlled) | Δ ≈ +0.9 all layers | ✅ Confirmed |
+| GWT bottleneck (~4 chunks) | eff_dim 3–4 in 22/36 layers | ✅ Confirmed |
+| Non-linear bifurcation (causal steering) | α=0.2 threshold, sham-stable | ✅ Confirmed |
+| LoRA heals RCR quantization | 2/6 → 6/6 | ✅ Confirmed |
+| Temporal precedence | sham Δ = −0.8 | ❌ Artifact |
+| Circular geometry (Sun et al.) | sham Δ = −1 sector | ❌ Artifact |
+| Linear wave interference | sham Δ = +0.011 | ❌ Falsified |
 
 ## File map
 
