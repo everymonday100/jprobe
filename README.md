@@ -60,9 +60,12 @@ python control_lora2.py
 | Operand encoding (layer-wise, sham-controlled) | Δ ≈ +0.9 all layers | ✅ Confirmed |
 | GWT bottleneck (~4 chunks) | eff_dim 3–4 in 22/36 layers | ✅ Confirmed |
 | Non-linear bifurcation (causal steering) | α=0.2 threshold, sham-stable | ✅ Confirmed |
+| **MLP digit crystallization (next-token)** | **Δ=+0.28 early → +0.82 late** | ✅ **Confirmed** |
 | Temporal precedence | sham Δ = −0.8 | ❌ Artifact |
 | Circular geometry (Sun et al.) | sham Δ = −1 sector | ❌ Artifact |
 | Linear wave interference | sham Δ = +0.011 | ❌ Falsified |
+| RMT filtering (keep top-k) | OOS Δ = −0.047 | ❌ Harms generalization |
+| Spectral subtraction (remove top-k) | OOS Δ = −0.65 at k=4 | ❌ Destroys signal |
 
 ## File map
 
