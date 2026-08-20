@@ -5,8 +5,9 @@
 Qwen2.5-3B performs arithmetic through a **W-shaped information bottleneck**:
 input compression → computational expansion → output crystallization. This
 three-phase dynamics is supported by PCA capacity analysis, sham-controlled
-operand probes, and causal activation steering. Linear wave superposition,
-circular geometry, and temporal precedence are falsified by matched controls.
+operand probes, causal activation steering, and non-linear MLP digit readout.
+Linear wave superposition, circular geometry, temporal precedence, and RMT
+spectral filtering are falsified by matched controls.
 
 ---
 
@@ -43,7 +44,24 @@ circular geometry, and temporal precedence are falsified by matched controls.
 - **Result:** Sharp bifurcation at α≈0.2 (REAL only); SHAM stable. Operation-specific (addition/subtraction affected; multiplication/division immune).
 - **Interpretation:** SwiGLU gates act as threshold switches, not smooth modulators. Numeric computation is non-linear attractor dynamics.
 
-### 4. LoRA Heals Quantization
+### 4. Non-linear Digit Crystallization (MLP next-token prediction)
+- **Method:** 3-layer MLP probe predicting NEXT digit from hidden state, layer-wise with label-shuffled sham control. No residual leakage (predicts token i+1 from hidden state at position i).
+- **Result:** Progressive crystallization across layers.
+
+| Zone | Layers | Mean Δ (real-sham) | Interpretation |
+|------|--------|-------------------|----------------|
+| Early (Collapse) | 0–12 | +0.279 | Weak signal, operands as magnitudes |
+| Middle (Boiling) | 13–27 | +0.417 | Moderate, computation in progress |
+| Late (Crystallization) | 28–35 | **+0.821** | **Near-perfect digit prediction** |
+
+- **Key dynamics:**
+  - L0: Δ=+0.136 (weak)
+  - L8–20: plateau ~0.35 (moderate)
+  - **L24: sharp jump Δ=+0.562** (crystallization onset)
+  - L28–35: Δ=+0.73→0.88 (full crystallization)
+- **Interpretation:** Digits are encoded non-linearly and crystallize gradually. Linear probes fail because they average across the trajectory; MLP captures layer-specific non-linear structure.
+
+### 5. LoRA Heals Quantization
 - **RCR quantized:** 2/6 on TEST arithmetic.
 - **RCR + LoRA (fp16-trained adapter):** 6/6.
 - **Interpretation:** Lightweight adapter corrects quantization artifacts at the interface level without touching base weights.
@@ -58,7 +76,8 @@ circular geometry, and temporal precedence are falsified by matched controls.
 | Circular magnitude (Sun et al.) | Phase mod 10 | −1 sector | ❌ Artifact of ridge in overcomplete regime |
 | Linear wave interference | Cosine superposition | +0.011 | ❌ Falsified; baseline cosine ~0.8 dominates |
 | Wave resonance (causal) | Accuracy at varying α | 0 / harmful | ❌ No linear amplification |
-| Per-digit readout | Linear / binary / circular | — | ❌ Impossible; digits fused into magnitude |
+| RMT filtering (keep top-k) | OOS operand corr | −0.047 | ❌ Harms generalization |
+| Spectral subtraction (remove top-k) | OOS operand corr | −0.65 at k=4 | ❌ Top components carry signal |
 
 **Methodological note:** All positive claims survived label-shuffled or random-vector sham controls. Multiple hypotheses that appeared positive under naive metrics were falsified by matched controls, preventing false discoveries.
 
@@ -68,11 +87,11 @@ circular geometry, and temporal precedence are falsified by matched controls.
 
 > Computations in Qwen2.5-3B follow a W-shaped information bottleneck:
 >
-> 1. **Collapse (L0–13):** Input compresses to ~4 dimensions (GWT bottleneck). Operands encoded as holistic magnitudes, not digit chains.
-> 2. **Boiling (L14–27):** Workspace expands to ~7 dimensions. Non-linear SwiGLU gates drive computation; operand encoding peaks; causal steering triggers bifurcation at α≈0.2.
-> 3. **Crystallization (L28–35):** Result compresses back to ~4 dimensions, forming a compact attractor for LM-head tokenization.
+> 1. **Collapse (L0–13):** Input compresses to ~4 dimensions (GWT bottleneck). Operands encoded as holistic magnitudes, not digit chains. Weak digit signal (MLP Δ≈0.28).
+> 2. **Boiling (L14–27):** Workspace expands to ~7 dimensions. Non-linear SwiGLU gates drive computation; operand encoding peaks; causal steering triggers bifurcation at α≈0.2. Digits begin to crystallize (MLP Δ≈0.42, sharp onset at L24).
+> 3. **Crystallization (L28–35):** Result compresses back to ~4 dimensions, forming a compact attractor for LM-head tokenization. Digits fully crystallized (MLP Δ≈0.82–0.88).
 >
-> This three-phase dynamics is supported by PCA capacity analysis, sham-controlled operand probes, and causal activation steering. Linear wave superposition, circular geometry, and temporal precedence are falsified. Computation is non-linear attractor dynamics within a GWT-constrained workspace.
+> This three-phase dynamics is supported by PCA capacity analysis, sham-controlled operand probes, causal activation steering, and non-linear MLP digit readout. Linear wave superposition, circular geometry, temporal precedence, and RMT spectral filtering are falsified. Computation is non-linear attractor dynamics within a GWT-constrained workspace.
 
 ---
 
@@ -83,7 +102,9 @@ circular geometry, and temporal precedence are falsified by matched controls.
 | RCR-quantized model | `qwen3b_rcr.pt` | 4-bit NF4 + Int8 residual plug |
 | LoRA adapter | `lora_math.pt` | fp16-trained, heals quantization |
 | Op/A/B probes | `steer.pt` | Ridge probes, sham-validated |
-| Digit probes (negative) | `digits.pt`, `circ_digits.pt` | Failed readout attempts |
+| Digit probes (negative) | `digits.pt`, `circ_digits.pt` | Failed linear readout attempts |
+| MLP digit probe | `probe_mlp_nexttoken.py` | Non-linear crystallization readout |
 | Interpreter | `jprobe_interpreter.py` | Op trajectory + thought tokens |
 | GWT analysis | `wave_gwt_pca.py` | Layer-wise capacity |
 | Causal steering | `wave_resonance_fine.py` | Bifurcation demonstration |
+| RMT filter (negative) | `rmt_filter_probe.py` | Spectral filtering, harms generalization |
