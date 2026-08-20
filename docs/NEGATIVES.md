@@ -96,6 +96,60 @@
 
 **Lesson:** Latent steering produces non-linear bifurcations, not linear resonance. The correct model is attractor dynamics with threshold transitions, not wave amplification. This IS a confirmed causal effect (sham-stable), just not the linear kind initially hypothesized.
 
+## RMT filtering (Marchenko-Pastur / Tracy-Widom signal extraction)
+
+**Experiment:** Filter middle-layer activations (L14–27, last prompt token, N=64)
+by zeroing singular components below an adaptive spectral threshold
+(MP-informed, median-eigenvalue × 3), then re-measure out-of-sample operand corr
+(k-fold CV, no label leakage).
+
+**Result:** Mean OOS corr drops from 0.94 → 0.89 (Δ = −0.047); worst at range
+edges (Δ = −0.11 at L14, L24–27). ~17 components retained; still harms generalization.
+
+**Why:** Operand signal is NOT concentrated in a few Tracy-Widom spikes. It is
+distributed across the spectrum, so any hard spectral cutoff (MP, PCA, circular)
+removes task-relevant directions. Linear/spectral compression is lossy by design here.
+
+**Lesson:** Operand encoding is a distributed subspace, not a low-rank spectral
+outlier. Consistent with all prior negatives (temporal, circular, wave): the
+signal is non-linear and spread out; only magnitude-level distributed probes work.
+
+## Spectral subtraction ("remove top-k syntax slab")
+
+**Hypothesis (Gemini):** top-17 spectral components are a "syntax slab" masking
+interference waves of digits; zeroing them should reveal hidden digit structure.
+
+**Experiment:** Zero top-k singular components (k=4,8,17,32,64), reconstruct,
+measure out-of-sample operand corr (k-fold CV).
+
+**Result:** Removing even top-4 collapses OOS corr from 0.94 to −0.65.
+k=64 → 0.000 (all-zero, trivial). Any top-k removal destroys the signal.
+
+**Interpretation:** Top spectral components are NOT syntax noise — they carry
+the operand signal. There is nothing readable "under the slab". Combined with
+the keep-top-17 test (0.94→0.89), this shows operand encoding is concentrated
+in a few dominant components, consistent with the GWT ~4-chunk bottleneck.
+
+**Verdict:** Spectral-subtraction hypothesis falsified. Top components = working
+memory core, not a mask.
+
+## Linear per-digit readout (three methods)
+
+**Experiment:** Three linear/circular methods attempted:
+(1) linear A/B regression, (2) binary digit-presence probes (16/32 prompts),
+(3) circular phase readout mod 10.
+
+**Result:** All failed. Linear gives uncalibrated values; binary probes produce
+noise; circular phases collapse to binary ±π/0 (constant-label artifact) or fail sham.
+
+**Why:** Digits are encoded non-linearly and crystallize gradually across layers.
+Linear probes average across the trajectory and miss layer-specific structure.
+MLP next-token prediction (see RESULTS.md) shows digits ARE readable non-linearly
+with progressive crystallization (Δ=+0.28 early → +0.82 late).
+
+**Lesson:** Per-digit interpretability requires non-linear probes AND layer-specific
+analysis. Linear/circular methods are insufficient for this model's encoding scheme.
+
 ## Limitations summary
 
 - Small eval (6-prompt TEST) — no CIs
